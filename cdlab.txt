@@ -1,0 +1,313 @@
+1. count no of integers
+	%{
+int integerCount = 0;
+%}
+
+%%
+[0-9]+     { integerCount++; }
+.          { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of integers: %d\n", integerCount);
+    return 0;
+}
+
+
+2. no of array
+
+	%{
+int arrayCount = 0;
+%}
+
+%%
+\[.*\]    { arrayCount++; }
+.         { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of arrays: %d\n", arrayCount);
+    return 0;
+}
+
+
+
+3. no of printf
+	%{
+int printfCount = 0;
+%}
+
+%%
+"printf"    { printfCount++; }
+.           { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of printf occurrences: %d\n", printfCount);
+    return 0;
+}
+
+
+4. no of func
+
+	%{
+int functionCount = 0;
+%}
+
+%%
+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)    { functionCount++; }
+.                                     { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of functions: %d\n", functionCount);
+    return 0;
+}
+
+
+5.  no. of pattern occurence
+		%{
+int patternCount = 0;
+%}
+
+%%
+<Pattern>   { patternCount++; }
+.           { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of pattern occurrences: %d\n", patternCount);
+    return 0;
+}
+
+
+
+6. no of digits
+	
+	%{
+int digitCount = 0;
+%}
+
+%%
+[0-9]     { digitCount++; }
+.         { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of digits: %d\n", digitCount);
+    return 0;
+}
+
+
+7. no. of 8 digits
+
+	%{
+int eightDigitCount = 0;
+%}
+
+%%
+[0-9]{8}     { eightDigitCount++; }
+.            { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of 8-digit numbers: %d\n", eightDigitCount);
+    return 0;
+}
+
+8. no of data types
+
+	%{
+#include <stdio.h>
+int dataTypeCount = 0;
+%}
+
+%%
+int|float|char   { dataTypeCount++; }
+.                { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of data types: %d\n", dataTypeCount);
+    return 0;
+}
+
+
+9. no. of header files
+		%{
+#include <stdio.h>
+int headerCount = 0;
+%}
+
+%%
+^#include\s+["<][^">]+[">]   { headerCount++; }
+.                           { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of header files: %d\n", headerCount);
+    return 0;
+}
+
+
+10. no. of numbers\
+
+%{
+int numberCount = 0;
+%}
+
+%%
+[0-9]+(\.[0-9]+)?     { numberCount++; }
+.                     { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of numbers: %d\n", numberCount);
+    return 0;
+}
+
+
+
+lex and yacc question
+
+1. vowel cons
+		%{
+int vowelCount = 0;
+int consonantCount = 0;
+%}
+
+%%
+[aAeEiIoOuU]     { vowelCount++; }
+[a-zA-Z]         { consonantCount++; }
+.                { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of vowels: %d\n", vowelCount);
+    printf("Number of consonants: %d\n", consonantCount);
+    return 0;
+}
+
+
+
+2. +ve and -ve integers
+
+%{
+int positiveCount = 0;
+int negativeCount = 0;
+%}
+
+%%
+-?[0-9]+     { 
+                int num = atoi(yytext);
+                if (num < 0)
+                    negativeCount++;
+                else
+                    positiveCount++;
+             }
+.            { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of positive integers: %d\n", positiveCount);
+    printf("Number of negative integers: %d\n", negativeCount);
+    return 0;
+}
+
+
+
+3. arithmetic expression
+
+%{
+int expressionCount = 0;
+%}
+
+%%
+[0-9]+(\.[0-9]+)?\s*[-+*/]\s*[0-9]+(\.[0-9]+)?   { expressionCount++; }
+.                                                { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of arithmetic expressions: %d\n", expressionCount);
+    return 0;
+}
+
+
+4. balance bracket
+
+%{
+#include <stdio.h>
+int bracketCount = 0;
+int balanceCount = 0;
+%}
+
+%%
+[()]     { bracketCount++; }
+
+%%
+
+int main(int argc, char *argv[]) {
+    int token;
+    while ((token = yylex()) != 0) {
+        if (token == '(')
+            balanceCount++;
+        else if (token == ')') {
+            if (balanceCount > 0) {
+                balanceCount--;
+                bracketCount--;
+            }
+        }
+    }
+    
+    printf("Number of brackets: %d\n", bracketCount);
+    printf("Number of balanced brackets: %d\n", balanceCount);
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
+
+
+
+5. no. of comment lines
+
+%{
+#include <stdio.h>
+int commentCount = 0;
+%}
+
+%%
+"//"(.*)\n    { commentCount++; }
+"/*"([^*]|\*+[^*/])*\*+"/"    { commentCount++; }
+.             { /* Ignore all other characters */ }
+%%
+
+int main(int argc, char *argv[]) {
+    yylex();
+    printf("Number of comment lines: %d\n", commentCount);
+    return 0;
+}
+
+
+commands
+
+lex <file name.l>
+Cc lex.yy.c-lfl
+./a.out <input file> (if needed)
+
+
+

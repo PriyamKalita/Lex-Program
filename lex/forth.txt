@@ -1,0 +1,101 @@
+(1)Lex program to find how many integer, numbers arrays etc have been used in a program
+
+%{
+#include <stdio.h>
+int num_integers = 0;
+int num_floats = 0;
+int num_arrays = 0;
+int num_other = 0;
+%}
+
+%%
+
+int { num_integers++; }
+float { num_floats++; }
+[a-zA-Z]+[\[\d+\]]+ { num_arrays++; }
+[a-zA-Z]+ { num_other++; }
+
+%%
+
+int main()
+{
+    yylex();
+    printf("Number of integers: %d\n", num_integers);
+    printf("Number of floating point numbers: %d\n", num_floats);
+    printf("Number of arrays: %d\n", num_arrays);
+    printf("Number of other variables: %d\n", num_other);
+    return 0;
+}
+
+lex count_variables.l
+gcc lex.yy.c -o count_variables -ll
+
+
+
+
+
+
+
+
+
+
+
+(2)Program to calculate no. of comment lines in a given C program.
+Also replace them with /*This was a comment line*/ and copy that
+program into a separate file.
+
+lex count_comments.l
+gcc lex.yy.c count_comments.c -o count_comments
+
+%{
+#include <stdio.h>
+int num_comments = 0;
+%}
+
+%%
+
+"//"(.*) { num_comments++; printf("/*This was a comment line*/%s\n", yytext); }
+"/*" { num_comments++; printf("%s", yytext); }
+.|\n { printf("%s", yytext); }
+
+%%
+
+int main(int argc, char** argv)
+{
+    if (argc < 3) {
+        printf("Usage: %s <input_file> <output_file>\n", argv[0]);
+        return 1;
+    }
+
+    FILE* input = fopen(argv[1], "r");
+    if (!input) {
+        printf("Error opening input file %s\n", argv[1]);
+        return 1;
+    }
+
+    FILE* output = fopen(argv[2], "w");
+    if (!output) {
+        printf("Error opening output file %s\n", argv[2]);
+        fclose(input);
+        return 1;
+    }
+
+    yyin = input;
+    yyout = output;
+
+    yylex();
+
+    printf("Number of comment lines: %d\n", num_comments);
+
+    fclose(input);
+    fclose(output);
+    return 0;
+}
+
+
+
+
+
+
+
+

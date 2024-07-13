@@ -1,0 +1,5 @@
+This is a sample input file.
+It contains multiple occurrences of the pattern.
+The pattern can be pattern, patterned, patterns, or patternize.
+Counting the occurrences of the pattern is the goal.
+Let's see how many times the pattern appears.

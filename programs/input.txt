@@ -1,0 +1,9 @@
+
+
+/* This is a comment */
+int main() {
+    printf("Hello, world!"); /* Print a message */
+    return 0;
+}
+
+/* Another comment */
